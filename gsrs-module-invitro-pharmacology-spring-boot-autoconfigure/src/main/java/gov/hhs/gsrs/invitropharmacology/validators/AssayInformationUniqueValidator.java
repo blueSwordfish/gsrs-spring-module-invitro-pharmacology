@@ -46,51 +46,55 @@ public class AssayInformationUniqueValidator implements ValidatorPlugin<InvitroA
         // Re-attach the detach object
         // For @ManyToOne and @ManyToMany, when passing a detached child object, need to re-attach it.
 
-        // If the size of the AssaySet is not same for new and old objec
-        if (objnew.invitroAssaySets.size() != objold.invitroAssaySets.size()) {
+        // If the size of the AssaySet is not same for new and old object
+        if (objnew.invitroAssaySets != null) {
+          //  if (objnew.invitroAssaySets.size() != objold.invitroAssaySets.size()) {
 
-            if (objnew.invitroAssaySets.size() > 0) {
+                if (objnew.invitroAssaySets.size() > 0) {
 
-                for (int i = 0; i < objnew.invitroAssaySets.size(); i++) {
-                    InvitroAssaySet asySet = objnew.invitroAssaySets.get(i);
-                    // if AssaySet already exists into the database, get the InvitroAssaySet object by Id
-                    if (asySet.id != null) {
+                    for (int i = 0; i < objnew.invitroAssaySets.size(); i++) {
+                        InvitroAssaySet asySet = objnew.invitroAssaySets.get(i);
+                        // if AssaySet already exists into the database, get the InvitroAssaySet object by Id
+                        if (asySet.id != null) {
 
-                        entityManager.merge(asySet);
+                            entityManager.merge(asySet);
 
-                        // Find Assay Set By Assay Set id
-                        InvitroAssaySet existingAssaySet = repository.findAssaySetById(asySet.id);
+                            // Find Assay Set By Assay Set id
+                            InvitroAssaySet existingAssaySet = repository.findAssaySetById(asySet.id);
 
-                        //if AssaySet Object found in the database, set it to Assay
-                        if (existingAssaySet != null) {
-                            asySet = existingAssaySet;
-                            objnew.invitroAssaySets.set(i, asySet);
+                            //if AssaySet Object found in the database, set it to Assay
+                            if (existingAssaySet != null) {
+                                asySet = existingAssaySet;
+                                objnew.invitroAssaySets.set(i, asySet);
+                            }
+
                         }
-
                     }
                 }
-            }
+           // }
         }
 
         // Re-attach Invitro Assay Result Information that already exists into the new Screening object.
-        if (objnew.invitroAssayScreenings.size() > 0) {
+        if (objnew.invitroAssayScreenings != null) {
+            if (objnew.invitroAssayScreenings.size() > 0) {
 
-            for (int j = 0; j < objnew.invitroAssayScreenings.size(); j++) {
-                InvitroAssayScreening screening = objnew.invitroAssayScreenings.get(j);
+                for (int j = 0; j < objnew.invitroAssayScreenings.size(); j++) {
+                    InvitroAssayScreening screening = objnew.invitroAssayScreenings.get(j);
 
-                if (screening.id == null) {
-                    if (screening.invitroAssayResultInformation != null) {
+                    if (screening.id == null) {
+                        if (screening.invitroAssayResultInformation != null) {
 
-                        if (screening.invitroAssayResultInformation.id != null) {
+                            if (screening.invitroAssayResultInformation.id != null) {
 
-                            entityManager.merge(screening.invitroAssayResultInformation);
+                                entityManager.merge(screening.invitroAssayResultInformation);
 
-                            // Find Information Result by Id
-                            InvitroAssayResultInformation resultInfo = repository.findAssayResultInformationById(screening.invitroAssayResultInformation.id);
+                                // Find Information Result by Id
+                                InvitroAssayResultInformation resultInfo = repository.findAssayResultInformationById(screening.invitroAssayResultInformation.id);
 
-                            //if AssaySet Object found in the database, set it to Assay
-                            if (resultInfo != null) {
-                                screening.invitroAssayResultInformation = resultInfo;
+                                //if AssaySet Object found in the database, set it to Assay
+                                if (resultInfo != null) {
+                                    screening.invitroAssayResultInformation = resultInfo;
+                                }
                             }
                         }
                     }
